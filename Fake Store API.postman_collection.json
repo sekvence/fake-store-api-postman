@@ -1,0 +1,1674 @@
+{
+  "info": {
+    "_postman_id": "33cac685-0499-4e96-89af-ce5b66a925d3",
+    "name": "Fake Store API",
+    "description": "# Fake Store API (v2.1.11) Testing (Postman)\n\n## Project Overview\n\nThis project contains API tests for the Fake Store API created in Postman.\n\nThe collection covers CRUD operations for the **Products** endpoint.\n\n## Covered Endpoints\n\n- GET /products\n    \n- GET /products/{id}\n    \n- POST /products\n    \n- PUT /products/{id}\n    \n- DELETE /products/{id}\n    \n\n## Test Coverage\n\n### Positive scenarios\n\n- Get all products\n    \n- Get product by existing ID\n    \n- Create product\n    \n- Update product\n    \n- Delete product\n    \n\n### Negative scenarios\n\n- Non-existing ID\n    \n- Invalid ID\n    \n- Missing required field\n    \n- Invalid data type\n    \n- Empty body\n    \n- Boundary values\n    \n- Extra fields\n    \n- ID mismatch\n    \n\n## Validations\n\n- Status codes\n    \n- Response body\n    \n- JSON Schema\n    \n- Response time\n    \n- Business logic validation\n    \n- Required fields\n    \n- Data types\n    \n\n## Tools\n\n- Postman (12.19.2)\n    \n- JavaScript\n    \n- Chai Assertions\n    \n\n## API\n\n[https://fakestoreapi.com](https://fakestoreapi.com)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    },
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get all products",
+          "item": [
+            {
+              "name": "Get all products",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const products = pm.response.json();",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.test(\"Response is JSON\", function () {",
+                      "    pm.response.to.be.json;",
+                      "});",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });",
+                      "pm.test(\"Products list is not empty\", function () {",
+                      "    pm.expect(products).to.be.an(\"array\");",
+                      "    pm.expect(products.length).to.be.above(0);",
+                      "});",
+                      "const schema = {",
+                      "    type: 'array',",
+                      "    items: {",
+                      "        type: 'object',",
+                      "        required: [",
+                      "            'id',",
+                      "            'title',",
+                      "            'price',",
+                      "            'description',",
+                      "            'category',",
+                      "            'image'",
+                      "        ],",
+                      "        properties: {",
+                      "            id: {",
+                      "                type: 'number'",
+                      "            },",
+                      "            title: { type: 'string' },",
+                      "            price: { type: 'number' },",
+                      "            description: { type: 'string' },",
+                      "            category: { type: 'string' },",
+                      "            image: { type: 'string' }",
+                      "        }",
+                      "    }",
+                      "}",
+                      "pm.test(\"Response matches schema\", function () {",
+                      "    pm.response.to.have.jsonSchema(schema);",
+                      "});",
+                      "pm.test(\"Price is greater than 0\", function () {",
+                      "    products.forEach(product => {",
+                      "        pm.expect(product.price).to.be.above(0);",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {}
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/products",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                },
+                "description": "## Retrieves the list of all products.\n\nThis request verifies that the API returns a collection of available products.\n\n## Expected result:\n\n- Status code: 200 OK\n    \n- Response format: JSON\n    \n- Response body contains an array of products\n    \n- Each product contains required fields\n    \n- Response time is within acceptable limits"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Add a new product",
+          "item": [
+            {
+              "name": "All data is correct",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const newProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const additionResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(additionResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(additionResult.title).to.eql(newProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(additionResult.price).to.eql(newProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(additionResult.description).to.eql(newProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(additionResult.category).to.eql(newProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(additionResult.image).to.eql(newProduct.image);\r",
+                      "});\r",
+                      "const response = pm.response.json();\r",
+                      "pm.environment.set(\"productId\", response.id);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Phone\",\r\n    \"price\": 1499.99,\r\n    \"description\": \"Beautiful new phone\",\r\n    \"category\": \"electronics\",\r\n    \"image\": \"http://example.com\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                },
+                "description": "## Creates a new product using valid data.\n\nThis request verifies that the API accepts a valid product object and returns the created product data.\n\n## Expected result:\n\n- Status code: 201 Created\n    \n- Response format: JSON\n    \n- Returned product contains generated id\n    \n- Returned fields match the request data\n    \n- Response time is within acceptable limits\n    \n\n## Note:\n\nFake Store API simulates product creation. Created products are not permanently stored in the database."
+              },
+              "response": []
+            },
+            {
+              "name": "Missing required field",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const newProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const additionResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(additionResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(additionResult.price).to.eql(newProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(additionResult.description).to.eql(newProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(additionResult.category).to.eql(newProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(additionResult.image).to.eql(newProduct.image);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"price\": 1499.99,\r\n    \"description\": \"Beautiful new phone\",\r\n    \"category\": \"electronics\",\r\n    \"image\": \"http://example.com\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                },
+                "description": "## Creates a product request without a required field.\n\nThis request verifies API behavior when a mandatory product field is missing from the request body.\n\n## Expected result:\n\n- API should validate the request body\n    \n- Response should indicate invalid input if validation is implemented\n    \n- Response format should be JSON\n    \n\n## Note:\n\nFake Store API does not perform strict validation of required fields. The request may be accepted even with missing data."
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid data type",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const newProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const additionResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(additionResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(additionResult.title).to.eql(newProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(additionResult.description).to.eql(newProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(additionResult.category).to.eql(newProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(additionResult.image).to.eql(newProduct.image);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Phone\",\r\n    \"price\": \"1499.99\",\r\n    \"description\": \"Beautiful new phone\",\r\n    \"category\": \"electronics\",\r\n    \"image\": \"http://example.com\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                },
+                "description": "## Creates a product request with invalid data types.\n\nThis request verifies how the API handles incorrect data types in the request body.\n\n## Expected result:\n\n- API should reject invalid data types\n    \n- Response should indicate validation error if validation is implemented\n    \n- Response format should be JSON\n    \n\n## Note:\n\nFake Store API does not strictly validate field data types and may accept invalid input."
+              },
+              "response": []
+            },
+            {
+              "name": "Boundary value",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const newProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const additionResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(additionResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(additionResult.title).to.eql(newProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(additionResult.price).to.eql(newProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(additionResult.description).to.eql(newProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(additionResult.category).to.eql(newProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(additionResult.image).to.eql(newProduct.image);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Phone\",\r\n    \"price\": 0,\r\n    \"description\": \"Beautiful new phone\",\r\n    \"category\": \"electronics\",\r\n    \"image\": \"http://example.com\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                },
+                "description": "## Verifies handling of boundary values.\n\nThis request verifies that the API accepts a valid product object and returns the created product data.\n\n## Expected result:\n\n- Status code: 201 Created\n    \n- Response format: JSON\n    \n- Returned product contains generated id\n    \n- Returned fields match the request data\n    \n\n## Note:\n\nFake Store API simulates product creation. Created products are not permanently stored in the database."
+              },
+              "response": []
+            },
+            {
+              "name": "Extra fields",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const newProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const additionResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(additionResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(additionResult.title).to.eql(newProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(additionResult.price).to.eql(newProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(additionResult.description).to.eql(newProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(additionResult.category).to.eql(newProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(additionResult.image).to.eql(newProduct.image);\r",
+                      "});\r",
+                      "pm.test(\"Response does not contain extra field\", function () {\r",
+                      "    pm.expect(additionResult).to.not.have.property(\"discount\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Phone\",\r\n    \"price\": 1499.99,\r\n    \"description\": \"Beautiful new phone\",\r\n    \"category\": \"electronics\",\r\n    \"image\": \"http://example.com\",\r\n    \"discount\": 15\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                },
+                "description": "## Creates a product request with an additional unknown field.\n\nThis request verifies API behavior when extra fields that are not part of the product model are included.\n\n## Expected result:\n\n- API should ignore unknown fields or reject the request depending on API specification\n    \n- Response format should be JSON\n    \n- Returned product should contain valid product fields\n    \n\n## Note:\n\nFake Store API may accept additional fields without validation."
+              },
+              "response": []
+            },
+            {
+              "name": "Empty body",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const additionResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(additionResult.id).to.be.a(\"number\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                },
+                "description": "## Verifies API behavior when an empty request body is sent.\n\nThis request verifies that the API accepts a valid product object and returns the created product data.\n\n## Expected result:\n\n- Status code: 201 Created\n    \n- Response format: JSON\n    \n- Returned product contains generated id\n    \n- Returned fields match the request data\n    \n\n## Note:\n\nFake Store API simulates product creation. Created products are not permanently stored in the database."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get a single product",
+          "item": [
+            {
+              "name": "Existing ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const product = pm.response.json();",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.test(\"Response is JSON\", function () {",
+                      "    pm.response.to.be.json;",
+                      "});",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });",
+                      "pm.test(\"Product is object\", function () {",
+                      "    pm.expect(product).to.be.an(\"object\");",
+                      "});",
+                      "const schema = {",
+                      "    type: 'object',",
+                      "    required: [",
+                      "        'id',",
+                      "        'title',",
+                      "        'price',",
+                      "        'description',",
+                      "        'category',",
+                      "        'image'",
+                      "    ],",
+                      "    properties: {",
+                      "        id: {",
+                      "            type: 'number'",
+                      "        },",
+                      "        title: { type: 'string' },",
+                      "        price: { type: 'number' },",
+                      "        description: { type: 'string' },",
+                      "        category: { type: 'string' },",
+                      "        image: { type: 'string' }",
+                      "    }",
+                      "};",
+                      "pm.test(\"Response matches schema\", function () {",
+                      "    pm.response.to.have.jsonSchema(schema);",
+                      "});",
+                      "pm.test(\"Product ID matches requested ID\", function () {",
+                      "    pm.expect(product.id).to.eql(Number(pm.environment.get(\"existingProductId\")));",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {}
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/products/{{existingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{existingProductId}}"
+                  ]
+                },
+                "description": "## Retrieves a single product by ID.\n\nThis request verifies that the API returns the correct product when a valid product ID is provided.\n\n## Expected result:\n\n- Status code: 200 OK\n    \n- Response format: JSON\n    \n- Response contains product details\n    \n- Product ID matches the requested ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Non-existing ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });",
+                      "pm.test(\"Response body is empty\", function () {",
+                      "    pm.expect(pm.response.text()).to.be.empty;",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {}
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/products/{{nonExistingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{nonExistingProductId}}"
+                  ]
+                },
+                "description": "## Retrieves a product using a non-existing ID.\n\nThis request verifies API behavior when a product with the specified ID does not exist.\n\n## Expected result:\n\n- API should return an appropriate not found response\n    \n- Response behavior should be documented\n    \n\n## Note:\n\nFake Store API returns an empty response for a non-existing product ID."
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });",
+                      "pm.test(\"Response body is empty\", function () {",
+                      "    pm.expect(pm.response.text()).to.be.empty;",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {}
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/products/{{invalidProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{invalidProductId}}"
+                  ]
+                },
+                "description": "## Retrieves a product using an invalid ID.\n\nThis request verifies how the API handles a request with an invalid or unsupported product ID.\n\n## Expected result:\n\n- The API should handle the request without crashing\n    \n- The response should clearly indicate that the requested product cannot be retrieved\n    \n- The returned status code and response body should match the API behavior\n    \n\n## Note:\n\nFake Store API does not always return a standard REST error response for invalid product IDs. The actual behavior is documented by this test case."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Update a product",
+          "item": [
+            {
+              "name": "All data is correct",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const updatedProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const updateResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(updateResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product ID matches requested ID\", function () {\r",
+                      "    pm.expect(updateResult.id).to.eql(Number(pm.environment.get(\"existingProductId\")));\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(updateResult.title).to.eql(updatedProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(updateResult.price).to.eql(updatedProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(updateResult.description).to.eql(updatedProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(updateResult.category).to.eql(updatedProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(updateResult.image).to.eql(updatedProduct.image);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Updated new Phone\",\r\n    \"price\": 1899.99,\r\n    \"description\": \"Even more beautiful phone\",\r\n    \"image\": \"http://example.com/image.jpg\",\r\n    \"category\": \"electronics\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products/{{existingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{existingProductId}}"
+                  ]
+                },
+                "description": "## Updates an existing product using valid data.\n\nThis request verifies that the API accepts valid product data and returns the updated product information.\n\n## Expected result:\n\n- Status code: 200 OK\n- Response format: JSON\n- Returned product ID matches the requested product ID\n- Returned fields match the updated request data\n- Response time is within acceptable limits\n\n## Note:\n\nFake Store API simulates product updates. Updated product data is not permanently stored in the database."
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid data type",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const updatedProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const updateResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(updateResult.id).to.be.a(\"number\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": null,\r\n    \"price\": \"1899.99\",\r\n    \"description\": true,\r\n    \"image\": \"http://example.com/image.jpg\",\r\n    \"category\": \"electronics\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products/{{existingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{existingProductId}}"
+                  ]
+                },
+                "description": "## Updates a product using invalid data types.\n\nThis request verifies how the API handles request fields with incorrect data types.\n\n## Expected result:\n\n- API should reject invalid data types if validation is implemented\n- Response should indicate validation error\n- Response format should be JSON\n\n## Note:\n\nFake Store API does not strictly validate field data types. The actual behavior is documented by this test case."
+              },
+              "response": []
+            },
+            {
+              "name": "Boundary values",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const updatedProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const updateResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(updateResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product ID matches requested ID\", function () {\r",
+                      "    pm.expect(updateResult.id).to.eql(Number(pm.environment.get(\"existingProductId\")));\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(updateResult.title).to.eql(updatedProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(updateResult.price).to.eql(updatedProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(updateResult.description).to.eql(updatedProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(updateResult.category).to.eql(updatedProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(updateResult.image).to.eql(updatedProduct.image);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Updated new Phone\",\r\n    \"price\": 0,\r\n    \"description\": \"Even more beautiful phone\",\r\n    \"image\": \"http://example.com/image.jpg\",\r\n    \"category\": \"electronics\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products/{{existingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{existingProductId}}"
+                  ]
+                },
+                "description": "## Updates a product using boundary values.\n\nThis request verifies API behavior when product fields contain boundary values such as empty strings or minimum numeric values.\n\n## Expected result:\n\n- API should validate boundary values according to business rules\n    \n- Invalid values should be rejected if restrictions are implemented\n    \n- Response format should be JSON\n    \n\n## Note:\n\nFake Store API does not enforce strict business validation. The actual behavior is documented by this test case."
+              },
+              "response": []
+            },
+            {
+              "name": "Extra fields",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const updatedProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const updateResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(updateResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product ID matches requested ID\", function () {\r",
+                      "    pm.expect(updateResult.id).to.eql(Number(pm.environment.get(\"existingProductId\")));\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(updateResult.title).to.eql(updatedProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(updateResult.price).to.eql(updatedProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(updateResult.description).to.eql(updatedProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(updateResult.category).to.eql(updatedProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(updateResult.image).to.eql(updatedProduct.image);\r",
+                      "});\r",
+                      "pm.test(\"Response does not contain extra field\", function () {\r",
+                      "    pm.expect(updateResult).to.not.have.property(\"discount\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Updated new Phone\",\r\n    \"price\": 1899.99,\r\n    \"description\": \"Even more beautiful phone\",\r\n    \"image\": \"http://example.com/image.jpg\",\r\n    \"category\": \"electronics\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products/{{existingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{existingProductId}}"
+                  ]
+                },
+                "description": "## Updates a product with additional unknown fields.\n\nThis request verifies how the API handles fields that are not defined in the product model.\n\n## Expected result:\n\n- API should ignore unknown fields or reject the request according to the API specification\n- Response format should be JSON\n\n## Note:\n\nFake Store API may accept additional fields without validation. The actual behavior is documented by this test case."
+              },
+              "response": []
+            },
+            {
+              "name": "Empty body",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const updateResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(updateResult.id).to.be.a(\"number\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products/{{existingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{existingProductId}}"
+                  ]
+                },
+                "description": "## Updates a product using an empty request body.\n\nThis request verifies API behavior when no product data is provided.\n\n## Expected result:\n\n- API should reject an empty request body if validation is implemented\n    \n- Response should indicate invalid input\n    \n- Response format should be JSON\n    \n\n## Note:\n\nFake Store API may accept an empty request body. The actual behavior is documented by this test case."
+              },
+              "response": []
+            },
+            {
+              "name": "Non-existing ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const updatedProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const updateResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(updateResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product ID matches requested ID\", function () {\r",
+                      "    pm.expect(updateResult.id).to.eql(Number(pm.environment.get(\"nonExistingProductId\")));\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(updateResult.title).to.eql(updatedProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(updateResult.price).to.eql(updatedProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(updateResult.description).to.eql(updatedProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(updateResult.category).to.eql(updatedProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(updateResult.image).to.eql(updatedProduct.image);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Updated new Phone\",\r\n    \"price\": 1899.99,\r\n    \"description\": \"Even more beautiful phone\",\r\n    \"image\": \"http://example.com/image.jpg\",\r\n    \"category\": \"electronics\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products/{{nonExistingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{nonExistingProductId}}"
+                  ]
+                },
+                "description": "## Updates a product using a non-existing product ID.\n\nThis request verifies how the API handles an update request for a product that does not exist.\n\n## Expected result:\n\n- The API should handle the request without crashing\n    \n- The response should clearly indicate that the requested product cannot be updated\n    \n- The returned status code and response body should match the API behavior\n    \n\n## Note:\n\nFake Store API does not always return a standard REST error response for non-existing product IDs. The actual behavior is documented by this test case."
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {\r",
+                      "    pm.response.to.have.status(400);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'status',\r",
+                      "        'message',\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        status: { type: 'string' },\r",
+                      "        message: { type: 'string' },\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"status is error\", function () {\r",
+                      "    pm.expect(pm.response.json().status).to.eql(\"error\");\r",
+                      "});\r",
+                      "pm.test(\"message is correct\", function () {\r",
+                      "    pm.expect(pm.response.json().message).to.eql(\"something went wrong! check your sent data\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Updated new Phone\",\r\n    \"price\": 1899.99,\r\n    \"description\": \"Even more beautiful phone\",\r\n    \"image\": \"http://example.com/image.jpg\",\r\n    \"category\": \"electronics\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products/{{invalidProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{invalidProductId}}"
+                  ]
+                },
+                "description": "## Updates a product using an invalid product ID.\n\nThis request verifies how the API handles an update request with an invalid or unsupported product ID.\n\n## Expected result:\n\n- Response format: JSON\n- Response contains an error status\n- Response contains an error message describing the invalid request\n\n## Note:\n\nFake Store API returns a JSON error response for invalid product IDs."
+              },
+              "response": []
+            },
+            {
+              "name": "Mismatched ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const updatedProduct = JSON.parse(pm.request.body.raw);\r",
+                      "const updateResult = pm.response.json();\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product id is a number\", function () {\r",
+                      "    pm.expect(updateResult.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "pm.test(\"Product ID matches requested ID\", function () {\r",
+                      "    pm.expect(updateResult.id).to.eql(Number(pm.environment.get(\"existingProductId\")));\r",
+                      "});\r",
+                      "pm.test(\"Product title is correct\", function () {\r",
+                      "    pm.expect(updateResult.title).to.eql(updatedProduct.title);\r",
+                      "});\r",
+                      "pm.test(\"Price is correct\", function () {\r",
+                      "    pm.expect(updateResult.price).to.eql(updatedProduct.price);\r",
+                      "});\r",
+                      "pm.test(\"Description is correct\", function () {\r",
+                      "    pm.expect(updateResult.description).to.eql(updatedProduct.description);\r",
+                      "});\r",
+                      "pm.test(\"Category is correct\", function () {\r",
+                      "    pm.expect(updateResult.category).to.eql(updatedProduct.category);\r",
+                      "});\r",
+                      "pm.test(\"Image is correct\", function () {\r",
+                      "    pm.expect(updateResult.image).to.eql(updatedProduct.image);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"id\": 2,\r\n    \"title\": \"Updated new Phone\",\r\n    \"price\": 1899.99,\r\n    \"description\": \"Even more beautiful phone\",\r\n    \"image\": \"http://example.com/image.jpg\",\r\n    \"category\": \"electronics\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/products/{{existingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{existingProductId}}"
+                  ]
+                },
+                "description": "## Updates a product using different IDs in the request URL and request body.\n\nThis request verifies how the API handles a mismatch between the product ID specified in the URL and the product ID provided in the request body.\n\n## Expected result:\n\n- The API should handle the ID mismatch consistently\n    \n- The response should clearly indicate whether the request is accepted or rejected\n    \n- The returned status code and response body should match the API behavior\n    \n\n## Note:\n\nThe API specification should define which ID takes precedence. The actual behavior is documented by this test case."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Delete a product",
+          "item": [
+            {
+              "name": "Existing ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const product = pm.response.json();\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "pm.test(\"Product is object\", function () {\r",
+                      "    pm.expect(product).to.be.an(\"object\");\r",
+                      "});\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'id',\r",
+                      "        'title',\r",
+                      "        'price',\r",
+                      "        'description',\r",
+                      "        'category',\r",
+                      "        'image'\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        id: {\r",
+                      "            type: 'number'\r",
+                      "        },\r",
+                      "        title: { type: 'string' },\r",
+                      "        price: { type: 'number' },\r",
+                      "        description: { type: 'string' },\r",
+                      "        category: { type: 'string' },\r",
+                      "        image: { type: 'string' }\r",
+                      "    }\r",
+                      "};\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"Product ID matches requested ID\", function () {\r",
+                      "    pm.expect(product.id).to.eql(Number(pm.environment.get(\"existingProductId\")));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/products/{{existingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{existingProductId}}"
+                  ]
+                },
+                "description": "## Deletes a product using an existing product ID.\n\nThis request verifies that the API successfully processes a delete request for an existing product.\n\n## Expected result:\n\n- Response format: JSON\n- Response contains the deleted product information\n- Returned product ID matches the requested product ID\n\n## Note:\n\nFake Store API simulates product deletion. Deleted products are not permanently removed from the database."
+              },
+              "response": []
+            },
+            {
+              "name": "Non-existing ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "pm.test(\"Response body is empty\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.be.empty;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/products/{{nonExistingProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{nonExistingProductId}}"
+                  ]
+                },
+                "description": "## Deletes a product using a non-existing product ID.\n\nThis request verifies how the API handles a delete request for a product that does not exist.\n\n## Expected result:\n\n- The API should handle the request without crashing\n- The response should clearly indicate that the requested product cannot be deleted\n- The returned status code and response body should match the API behavior\n\n## Note:\n\nFake Store API does not always return a standard REST error response for non-existing product IDs. The actual behavior is documented by this test case."
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {\r",
+                      "    pm.response.to.have.status(400);\r",
+                      "});\r",
+                      "pm.test(\"Response is JSON\", function () {\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 1000ms\", function () { pm.expect(pm.response.responseTime).to.be.below(1000) });\r",
+                      "const schema = {\r",
+                      "    type: 'object',\r",
+                      "    required: [\r",
+                      "        'status',\r",
+                      "        'message',\r",
+                      "    ],\r",
+                      "    properties: {\r",
+                      "        status: { type: 'string' },\r",
+                      "        message: { type: 'string' },\r",
+                      "    }\r",
+                      "}\r",
+                      "pm.test(\"Response matches schema\", function () {\r",
+                      "    pm.response.to.have.jsonSchema(schema);\r",
+                      "});\r",
+                      "pm.test(\"status is error\", function () {\r",
+                      "    pm.expect(pm.response.json().status).to.eql(\"error\");\r",
+                      "});\r",
+                      "pm.test(\"message is correct\", function () {\r",
+                      "    pm.expect(pm.response.json().message).to.eql(\"product id should be provided\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/products/{{invalidProductId}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{invalidProductId}}"
+                  ]
+                },
+                "description": "## Deletes a product using an invalid product ID.\n\nThis request verifies how the API handles a delete request with an invalid or unsupported product ID.\n\n## Expected result:\n\n- Response format: JSON\n- Response contains an error status\n- Response contains an error message describing the invalid request\n\n## Note:\n\nFake Store API returns a JSON error response for invalid product IDs."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
