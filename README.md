@@ -2,11 +2,13 @@
 
 ## Project Overview
 
-This project contains API tests for the Fake Store API created in Postman.
+API-тестирование Fake Store API в Postman.
 
-The collection covers CRUD operations for the **Products** endpoint.
+Проект содержит коллекцию из 21 тест-кейса для проверки CRUD-операций с ресурсом Products. Тесты включают позитивные и негативные сценарии, автоматические проверки response и параметризацию запросов с помощью переменных Postman.
 
-## Covered Endpoints
+## Test Coverage
+
+### CRUD Operations
 
 - GET /products
 - GET /products/{id}
@@ -14,56 +16,87 @@ The collection covers CRUD operations for the **Products** endpoint.
 - PUT /products/{id}
 - DELETE /products/{id}
 
-## Test Coverage
+### Positive Scenarios
 
-### Positive scenarios
+- Получение списка продуктов
+- Получение продукта по существующему ID
+- Создание продукта
+- Обновление продукта
+- Удаление продукта
 
-- Get all products
-- Get product by existing ID
-- Create product
-- Update product
-- Delete product
+### Negative Scenarios
 
-### Negative scenarios
+- Несуществующий ID
+- Некорректный ID
+- Отсутствие обязательного поля
+- Некорректный тип данных
+- Пустой request body
+- Граничные значения
+- Передача дополнительных полей
+- Несоответствие ID
 
-- Non-existing ID
-- Invalid ID
-- Missing required field
-- Invalid data type
-- Empty body
-- Boundary values
-- Extra fields
-- ID mismatch
+## Automated Validations
 
-## Validations
+Для каждого запроса реализованы автоматические проверки на JavaScript.
 
-- Status codes
+Проверяется:
+
+- HTTP status code
 - Response body
 - JSON Schema
 - Response time
-- Business logic validation
-- Required fields
-- Data types
+- Обязательные поля
+- Типы данных
+- Бизнес-логика
+- Корректность значений в response
+
+## Postman Features
+
+В проекте используются:
+
+- Collection
+- Environment variables
+- Request variables
+- JavaScript tests
+- Chai Assertions
+- Collection Runner
+
+Переменные используются для параметризации запросов и повторного использования тестовых данных.
+
+## Test Cases
+
+Всего реализован 21 тест-кейс:
+
+- Positive — проверка корректных сценариев
+- Negative — проверка обработки невалидных данных и граничных условий
 
 ## Tools
 
 - Postman 12.19.2
 - JavaScript
 - Chai Assertions
+- REST API
+- JSON
+- HTTP
 
 ## API
 
+Fake Store API — mock API для тестирования:
+
 https://fakestoreapi.com
 
-## How to use
+## How to Run
 
-1. Clone or download this repository.
+1. Clone or download the repository.
 2. Import the Postman collection.
-3. (Optional) Import the Postman environment.
-4. Run individual requests or the entire collection using Postman Collection Runner.
+3. Import the environment, если он используется в коллекции.
+4. Select the required environment.
+5. Run individual requests or the complete collection using Collection Runner.
 
 ## Notes
 
-- Fake Store API is a mock API intended for testing purposes.
-- Product creation, update and deletion are simulated and are not permanently stored.
-- Some endpoints may return inconsistent responses during repeated collection runs because of the public demo environment.
+Fake Store API является публичным mock API для тестирования.
+
+Операции создания, обновления и удаления данных симулируются и не гарантируют постоянное изменение данных на сервере.
+
+Поведение некоторых операций может отличаться при повторных запусках из-за особенностей публичного demo API.
